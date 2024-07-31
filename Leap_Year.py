@@ -13,3 +13,7 @@ def leap_year(n):
 if __name__ == "__main__":
     year = int(input("Enter the year"))
     print(leap_year(year))
+
+'''
+check if the year is leap year or not
+'''

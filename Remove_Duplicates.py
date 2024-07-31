@@ -1,8 +1,8 @@
 def remove_duplicates(nums):
-    if not nums:
+    if not nums:  # if there are no elements
         return 0
 
-    j = 1
+    j = 1  # because 0th element is always unique
     for i in range(1, len(nums)):
         if nums[i] != nums[i - 1]:
             nums[j] = nums[i]
