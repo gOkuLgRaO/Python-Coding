@@ -5,7 +5,9 @@ def reverse(lst):
 
 def reverse_another_method(lst2):
     for i in range(0, len(lst2) // 2):
-        lst2[i], lst2[len(lst2) - i - 1] = lst2[len(lst2) - i - 1], lst2[i]
+        temp = lst2[i]
+        lst2[i] = lst2[len(lst2) - i - 1]
+        lst2[len(lst2) - i - 1] = temp
     return lst2
 
 

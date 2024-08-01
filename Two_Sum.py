@@ -1,5 +1,8 @@
+from collections import defaultdict
+
+
 def two_sum(nums, key):
-    num_map = {}  # create an empty dictionary
+    num_map = defaultdict(int)  # create an empty dictionary
     for i, num in enumerate(nums):  # here, 'i' is index and 'num' is value at that index of list
         complement = key - num
         if complement in num_map:
