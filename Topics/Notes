@@ -1,0 +1,145 @@
+ROADMAP:
+--------
+
+1. Basic Syntax and Data Types
+Variables and Data Types (int, float, str, list, tuple, dict, set, etc.)
+Operators (arithmetic, comparison, logical, bitwise)
+Control Flow (if, else, elif, for loops, while loops)
+Functions (defining, calling, return statements, lambda functions)
+Input and Output (reading/writing files, user input)
+
+2. Advanced Data Structures
+Lists, Tuples, Dictionaries, and Sets
+List Comprehensions
+Dictionary Comprehensions
+Generators and Iterators
+
+3. Object-Oriented Programming (OOP)
+Classes and Objects
+Inheritance, Polymorphism, Encapsulation, and Abstraction
+Special Methods (dunder/magic methods like __init__, __str__, etc.)
+Class and Static Methods
+
+4. Modules and Packages
+Importing Modules
+Creating and Using Packages
+Standard Library Modules
+Third-party Libraries (using pip for installation)
+
+5. Error and Exception Handling
+Try, Except, Finally Blocks
+Custom Exceptions
+
+6. File Handling
+Reading and Writing Files
+Working with CSV, JSON, and other file formats
+
+7. Functional Programming
+Higher-order Functions
+Map, Filter, and Reduce
+Decorators
+
+8. Concurrency and Parallelism
+Threading
+Multiprocessing
+Asynchronous Programming (asyncio)
+
+9. Testing
+Writing Unit Tests
+Using Testing Frameworks like unittest, pytest
+
+10. Web Development
+Basic Understanding of HTTP and Web Servers
+Web Frameworks like Flask or Django
+
+11. Database Interaction
+SQL Basics
+Using ORMs like SQLAlchemy or Django ORM
+
+12. Networking
+Working with APIs
+Libraries like requests and socket
+
+13. Performance Optimization
+Profiling and Benchmarking
+Understanding Time Complexity
+Code Optimization Techniques
+
+14. Version Control
+Basic Git Commands
+Branching and Merging
+
+15. Development Tools and Best Practices
+Using IDEs and Text Editors (PyCharm, VSCode, etc.)
+Code Linters and Formatters (pylint, black)
+Writing Clean and Maintainable Code (PEP 8 Guidelines)
+
+16. Documentation
+Writing Docstrings
+Using Documentation Tools like Sphinx
+
+17. Deployment
+Basics of Deployment (Heroku, AWS, Docker)
+Continuous Integration/Continuous Deployment (CI/CD)
+
+
+
+
+
+
+
+Lists:
+Good for maintaining an ordered collection of elements that may change over time.
+Supports various methods like append(), remove(), pop(), sort(), etc.
+
+Dictionaries:
+Ideal for storing and retrieving values via keys.
+Supports methods like keys(), values(), items(), get(), etc.
+
+Tuples:
+Used when a collection of items should not change.
+Slightly more efficient in terms of memory and performance compared to lists.
+Can be used as keys in dictionaries if they contain only immutable elements.
+
+Sets:
+Best for membership tests, removing duplicates, and mathematical set operations like union,
+intersection, and difference.
+Supports methods like add(), remove(), union(), intersection(), etc.
+
+Strings:
+Used for text manipulation.
+Supports various string-specific methods like split(), join(), replace(), find(), etc.
+Immutable, so any operation that changes a string produces a new string.
+
+Maps (Dictionaries):
+The term "map" is often used interchangeably with "dictionary" in Python.
+Provide a way to associate keys with values, allowing for efficient data retrieval.
+
+Lambda Functions:
+Lambda functions are small anonymous functions defined using the lambda keyword.
+Ex:
+add = lambda x, y: x + y
+print(add(3, 5))  # 8
+
+Extracting a Value from a Nested Dictionary
+To extract a value from a nested dictionary, you need to access each level of the dictionary step by step.
+Ex:
+nested_dict = {
+    'key1': {
+        'nested_key1': {
+            'nested_nested_key1': 'value1'
+        },
+        'nested_key2': 'value2'
+    },
+    'key2': 'value3'
+}
+value=nested_dict['key1']['nested_key1']['nested_nested_key1']
+print(value)
+
+Handling Missing Keys
+If there is a chance that some keys might be missing, you can use the get method, which allows you to provide a
+default value if the key is not found.
+Ex:
+value=nested_dict.get('key1', {}).get('nested_key1', {}).get('nested_nested_key1', 'default value')
+print(value)
+

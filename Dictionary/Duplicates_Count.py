@@ -9,7 +9,7 @@ def count_duplicates(lst):
     for ele in lst:
         element_count[ele] += 1
 
-    # Creates a new dictionary duplicates that contains only the elements from element_count which have a count
+    # Creates a new dictionary 'duplicates' that contains only the elements from element_count which have a count
     # greater than 1
     duplicate = defaultdict(int)
     for ele, counts in element_count.items():  # 'ele' is key and 'count' is value
