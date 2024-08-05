@@ -85,6 +85,17 @@ Asserts that the resource name in the response matches the expected value.
 """
 
 
+def test_create_resource_non_admin(client):
+    # Register and login as User
+    client.post('/register', json={"username": "testuser", "password": "testpass"})
+    login_response = client.post('/login', json={"username": "testuser", "password": "testpass"})
+    token = login_response.get_json()['access_token']
+    headers = {"Authorization": f"Bearer {token}"}
+
+    response = client.post('/resource', json={"name": "Resource1"}, headers=headers)
+    assert response.status_code == 403
+
+
 def test_read_resource(client):
     client.post('/register', json={"username": "testuser", "password": "testpass"})
     login_response = client.post('/login', json={"username": "testuser", "password": "testpass"})
@@ -121,16 +132,11 @@ def test_update_resource(client):
     assert data['name'] == 'Updated Resource1'
 
 
-"""
-Tests the resource update endpoint.
-Registers a user and logs in to get an access token.
-Constructs the authorization headers with the token.
-Creates a resource first.
-Sends a PUT request to /resource/1 (assuming the resource ID is 1) with a JSON payload containing the updated resource name and the authorization headers.
-Asserts that the response status code is 200 (OK).
-Extracts the JSON response data.
-Asserts that the updated resource name in the response matches the expected value.
-"""
+"""Tests the resource update endpoint. Registers a user and logs in to get an access token. Constructs the 
+authorization headers with the token. Creates a resource first. Sends a PUT request to /resource/1 (assuming the 
+resource ID is 1) with a JSON payload containing the updated resource name and the authorization headers. Asserts 
+that the response status code is 200 (OK). Extracts the JSON response data. Asserts that the updated resource name in 
+the response matches the expected value."""
 
 
 def test_delete_resource(client):
@@ -155,3 +161,61 @@ Asserts that the response status code is 200 (OK).
 Extracts the JSON response data.
 Asserts that the response message indicates the resource was deleted successfully.
 """
+
+
+def test_rate_limiting(client):
+    client.post('/register', json={"username": "adminuser", "password": "adminpass", "role": "Admin"})
+    login_response = client.post('/login', json={"username": "adminuser", "password": "adminpass"})
+    token = login_response.get_json()['access_token']
+    headers = {"Authorization": f"Bearer {token}"}
+
+    rate_limit_exceeded = False
+    for _ in range(11):
+        response = client.post('/resource', json={"name": f"Resource{_}"}, headers=headers)
+        if response.status_code == 429:
+            rate_limit_exceeded = True
+            break
+
+    assert rate_limit_exceeded
+
+
+def test_list_resources_pagination(client):
+    client.post('/register', json={"username": "adminuser", "password": "adminpass", "role": "Admin"})
+    login_response = client.post('/login', json={"username": "adminuser", "password": "adminpass"})
+    token = login_response.get_json()['access_token']
+    headers = {"Authorization": f"Bearer {token}"}
+    for i in range(15):
+        client.post('/resource', json={"name": f"Resource{i}"}, headers=headers)
+
+    response = client.get('/resources?page=1&per_page=10', headers=headers)
+    assert response.status_code == 200
+    data = response.get_json()
+    assert data['total'] == 15
+    assert data['pages'] == 2
+    assert len(data['resources']) == 10
+
+
+def test_search_resources(client):
+    client.post('/register', json={"username": "adminuser", "password": "adminpass", "role": "Admin"})
+    login_response = client.post('/login', json={"username": "adminuser", "password": "adminpass"})
+    token = login_response.get_json()['access_token']
+    headers = {"Authorization": f"Bearer {token}"}
+    client.post('/resource', json={"name": "TestResource1"}, headers=headers)
+    client.post('/resource', json={"name": "TestResource2"}, headers=headers)
+
+    response = client.get('/resources/search?query=TestResource', headers=headers)
+    assert response.status_code == 200
+    data = response.get_json()
+    assert len(data) == 2
+
+
+def test_send_email(client):
+    client.post('/register', json={"username": "testuser", "password": "testpass"})
+    login_response = client.post('/login', json={"username": "testuser", "password": "testpass"})
+    token = login_response.get_json()['access_token']
+    headers = {"Authorization": f"Bearer {token}"}
+    response = client.post('/send-email', json={"email": "test@example.com", "message": "Hello, World!"},
+                           headers=headers)
+    assert response.status_code == 202
+    data = response.get_json()
+    assert data['message'] == 'Email is being sent'

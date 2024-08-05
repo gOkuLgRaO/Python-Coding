@@ -16,7 +16,10 @@ class Item:
     name: str
     price: float
     _quantity: int = 0  # Use _quantity to avoid redeclaration issues
-
+    """
+    In Python's dataclasses module, ClassVar is used to declare class variables, which are shared among all instances 
+    of the class. In contrast, normal variables are instance variables, which are unique to each instance of the class.
+    """
     def __post_init__(self):
         assert self.price >= 0, f"Price {self.price} must be greater than or equal to zero."
         assert self._quantity >= 0, f"Quantity {self._quantity} must be greater than or equal to zero."
@@ -26,31 +29,32 @@ class Item:
         Item.store_list.append(self)
         logging.info(f"Created Item: {self}")
 
-    @property
+    # Now we have to generate GETTERS AND SETTERS
+    @property  # GETTER for name attribute
     def name(self) -> str:
         return self.__name
 
-    @name.setter
+    @name.setter  # SETTER FOR name attribute
     def name(self, value: str):
         if len(value) > 10:
             raise ValueError("The name is too long!")
         self.__name = value
 
-    @property
+    @property  # GETTER
     def price(self) -> float:
         return self.__price
 
-    @price.setter
+    @price.setter  # SETTER
     def price(self, value: float):
         if value < 0:
             raise ValueError("Price cannot be negative!")
         self.__price = value
 
-    @property
+    @property  # GETTER
     def quantity(self) -> int:
         return self.__quantity
 
-    @quantity.setter
+    @quantity.setter  # SETTER
     def quantity(self, value: int):
         if value < 0:
             raise ValueError("Quantity cannot be negative!")
@@ -69,6 +73,12 @@ class Item:
         logging.info(f"Total price for {self.name} is {total}")
         return total
 
+    """
+    Class Methods
+    Access to Class: Class methods have access to the class (cls) but not to the instance (self).
+    Used for Factory Methods: They are often used for factory methods that create instances 
+    of the class in a certain way.
+    """
     @classmethod
     def instantiate_from_csv(cls, file_path: str):
         try:
@@ -88,6 +98,13 @@ class Item:
             logging.error(f"Failed to instantiate items from CSV. Error: {e}")
             raise RuntimeError(f"Failed to instantiate items from CSV. Error: {e}")
 
+    """
+    Static Methods
+    No Access to Class or Instance: Static methods do not have access to the class (cls) or 
+    instance (self) they are defined in.
+    Utility Functions: They are typically used to define utility functions that do not 
+    depend on class or instance-specific data.
+    """
     @staticmethod
     def is_integer(num: Union[int, float]) -> bool:
         if isinstance(num, float):

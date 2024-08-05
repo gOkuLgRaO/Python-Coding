@@ -1,8 +1,15 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+from flask_caching import Cache
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+from werkzeug.security import generate_password_hash, check_password_hash
+import logging
 import os
+import threading
+import multiprocessing
 
 """
 Flask: The main class for creating a Flask web application.
@@ -19,6 +26,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'supersecretkey')
+app.config['CACHE_TYPE'] = 'simple'
 
 """
 Creates a Flask app instance.
@@ -29,6 +37,8 @@ Sets the JWT secret key, either from an environment variable or a default value.
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 jwt = JWTManager(app)
+cache = Cache(app)
+limiter = Limiter(get_remote_address, app=app)
 
 """
 Initializes the SQLAlchemy instance for ORM.
@@ -42,6 +52,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
+    role = db.Column(db.String(20), nullable=False, default='User')  # User roles: Admin, User
 
 
 """
@@ -128,15 +139,33 @@ Handles 400 errors by returning a JSON response with a 400 status code.
 """
 
 
+# Background task example (e.g., sending email)
+def background_task(email, message):
+    # simulate sending an email
+    logging.info(f"Sending email to {email}: {message}")
+
+
+@app.route('/send-email', methods=['POST'])
+@jwt_required()
+def send_email():
+    data = request.json
+    email = data.get('email')
+    message = data.get('message')
+    threading.Thread(target=background_task, args=(email, message)).start()
+    return jsonify({"message": "Email is being sent"}), 202
+
+
 # User registration
 @app.route('/register', methods=['POST'])
 def register():
     data = request.json
     username = data.get('username')
     password = data.get('password')
+    role = data.get('role', 'User')
     if User.query.filter_by(username=username).first():
         return jsonify({"error": "Username already exists"}), 400
-    new_user = User(username=username, password=password)
+    hashed_password = generate_password_hash(password)
+    new_user = User(username=username, password=hashed_password, role=role)
     db.session.add(new_user)
     db.session.commit()
     return jsonify(user_schema.dump(new_user)), 201
@@ -156,10 +185,10 @@ def login():
     data = request.json
     username = data.get('username')
     password = data.get('password')
-    user = User.query.filter_by(username=username, password=password).first()
-    if not user:
+    user = User.query.filter_by(username=username).first()
+    if not user or not check_password_hash(user.password, password):
         return jsonify({"error": "Invalid credentials"}), 401
-    access_token = create_access_token(identity=user.id)
+    access_token = create_access_token(identity={"id": user.id, "role": user.role})
     return jsonify(access_token=access_token)
 
 
@@ -173,7 +202,11 @@ If valid, generates an access token and returns it.
 # Create a new resource
 @app.route('/resource', methods=['POST'])
 @jwt_required()
+@limiter.limit("10 per minute")
 def create_resource():
+    identity = get_jwt_identity()
+    if identity['role'] != 'Admin':
+        return jsonify({"error": "Permission denied"}), 403
     data = request.json
     name = data.get('name')
     if Resource.query.filter_by(name=name).first():
@@ -212,6 +245,9 @@ If found, returns the resource in JSON format.
 @app.route('/resource/<int:resource_id>', methods=['PUT'])
 @jwt_required()
 def update_resource(resource_id):
+    identity = get_jwt_identity()
+    if identity['role'] != 'Admin':
+        return jsonify({"error": "Permission denied"}), 403
     resource = Resource.query.get_or_404(resource_id)
     data = request.json
     resource.name = data.get('name')
@@ -231,6 +267,9 @@ Saves the changes and returns the updated resource in JSON format.
 @app.route('/resource/<int:resource_id>', methods=['DELETE'])
 @jwt_required()
 def delete_resource(resource_id):
+    identity = get_jwt_identity()
+    if identity['role'] != 'Admin':
+        return jsonify({"error": "Permission denied"}), 403
     resource = Resource.query.get_or_404(resource_id)
     db.session.delete(resource)
     db.session.commit()
@@ -242,6 +281,32 @@ Deletes a specific resource by its ID.
 Requires JWT authentication.
 If found, deletes the resource and returns a success message.
 """
+
+
+# List resources with pagination
+@app.route('/resources', methods=['GET'])
+@jwt_required()
+@cache.cached(timeout=60)
+def list_resources():
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 10, type=int)
+    resources = Resource.query.paginate(page=page, per_page=per_page, error_out=False)
+    return jsonify({
+        "total": resources.total,
+        "pages": resources.pages,
+        "current_page": resources.page,
+        "resources": resources_schema.dump(resources.items)
+    })
+
+
+# Search and filter resources
+@app.route('/resources/search', methods=['GET'])
+@jwt_required()
+def search_resources():
+    query = request.args.get('query', '', type=str)
+    resources = Resource.query.filter(Resource.name.contains(query)).all()
+    return jsonify(resources_schema.dump(resources))
+
 
 if __name__ == "__main__":
     app.run(debug=True)
