@@ -1,3 +1,4 @@
+from collections import defaultdict
 """
 Create a dictionary representing a phone book. Add a few contacts, update a contact,
 delete a contact, and retrieve a contact.
@@ -54,7 +55,8 @@ dict2 = {"c": 3, "d": 4}
 merged_dict = {**dict1, **dict2}
 
 """
-Create a nested dictionary to represent the information of employees in a company. The keys are employee IDs, and the values are dictionaries containing the employee's name, age, and department.
+Create a nested dictionary to represent the information of employees in a company. The keys are employee IDs, 
+and the values are dictionaries containing the employee's name, age, and department.
 """
 
 employees = {
@@ -105,7 +107,7 @@ print(frequency)
 """
 Use defaultdict from the collections module to count the frequency of elements in a list.
 """
-from collections import defaultdict
+
 
 # List of integers
 numbers = [1, 2, 2, 3, 3, 3, 4, 4, 4, 4]
@@ -117,7 +119,6 @@ for number in numbers:
     frequency[number] += 1
 
 print(dict(frequency))
-
 
 # DICTIONARY COMPREHENSION
 # ----------------------------
