@@ -1,51 +1,56 @@
 from OOPS.Item import Item
 from OOPS.Phone import Phone
 
-print(Item.is_integer(7.5))
-Item.instantiate_from_csv("items.csv")
-print(Item.store_list)
 
-item1 = Item("Phone", 1000, 5)  # whenever you create an instance(object) of the class,
-# the __init__ method of that class will be called by default.
-item2 = Item("Laptop", 10000, 2)  # again __init__ will be called now
+def main():
+    # Instantiate items from CSV file
+    Item.instantiate_from_csv("items.csv")
 
-item1.company = "Lenovo"  # attributes other than the ones mentioned in the __init__ can also be created
-#  The parameters which are compulsory have to me mentioned in __init__
+    # Display all items instantiated from the CSV
+    for item in Item.store_list:
+        print(item)
 
-item1.apply_discount()
-print(item1.price)
+    # Create a Phone instance
+    phone = Phone(
+        name="iPhone 13",
+        price=999.99,
+        _quantity=5,
+        _category="Electronics",
+        _weight=0.5,
+        _brand="Apple",
+        broken_phones=1,
+        year_of_manufacture=2021,
+        usage_hours=50,
+    )
 
-item2.apply_discount()
-print(item2.price)
+    # Display the created Phone instance
+    print(phone)
 
-print(item1.calculate_total_price())
-print(item2.calculate_total_price())
-print(Item.__dict__)  # all the attributes for class level
-print(item1.__dict__)  # all the attributes for instance level
+    # Apply discount to the phone
+    phone.apply_discount()
+    print(f"After discount: {phone}")
 
-print(Item.store_list)  # This list consists of all the values of all attributes for each object(instance).
+    # Calculate the total price of the phone
+    total_price = phone.calculate_total_price()
+    print(f"Total price: ${total_price:.2f}")
 
-for instance in Item.store_list:  # when you want to access particular attribute values from the list.
-    print(instance.name)
+    # Update the battery life of the phone based on usage
+    phone.update_battery_life()
+    print(f"Updated battery life: {phone.battery_life}%")
 
-phone1 = Phone("OnePlus", 500, 5, 1)
-print(phone1.calculate_total_price())
-phone2 = Phone("Apple", 700, 6, 2)
+    # Calculate the depreciation and resale value of the phone
+    depreciation = phone.calculate_depreciation()
+    resale_value = phone.calculate_resale_value()
+    print(f"Depreciation: ${depreciation:.2f}")
+    print(f"Resale value: ${resale_value:.2f}")
 
-print(Item.store_list)
-print(Phone.store_list)
+    # Check if the phone is outdated
+    is_outdated = phone.is_outdated()
+    print(f"Is the phone outdated? {'Yes' if is_outdated else 'No'}")
 
-print(item1.name)
-# setting an attribute
-item1.name = "OtherItem"
-# getting an attribute
-print(item1.name)
+    # Send an email regarding the phone (simulated)
+    phone.send_email()
 
-item1.apply_increment(0.2)
-print(item1.price)
-item1.send_email()
-# To check Data-Type
-print(type(item1))
-print(type(item1.name))
-print(type(item1.price))
-print(type(item1.quantity))
+
+if __name__ == "__main__":
+    main()

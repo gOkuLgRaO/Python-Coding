@@ -3,7 +3,12 @@ from flask import Flask, request, jsonify, abort
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from marshmallow import ValidationError, fields, validate
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import (
+    JWTManager,
+    create_access_token,
+    jwt_required,
+    get_jwt_identity,
+)
 from flask_caching import Cache
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
@@ -35,16 +40,16 @@ Celery: A distributed task queue library for handling background jobs.
 
 """
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'supersecretkey')
-app.config['CACHE_TYPE'] = 'redis'
-app.config['CACHE_REDIS_URL'] = 'redis://localhost:6379/0'
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 3600  # Tokens expire after 1 hour
-app.config['JWT_REFRESH_TOKEN_EXPIRES'] = 86400  # Refresh tokens expire after 24 hours
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "supersecretkey")
+app.config["CACHE_TYPE"] = "redis"
+app.config["CACHE_REDIS_URL"] = "redis://localhost:6379/0"
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = 3600  # Tokens expire after 1 hour
+app.config["JWT_REFRESH_TOKEN_EXPIRES"] = 86400  # Refresh tokens expire after 24 hours
 app.config.update(
-    CELERY_BROKER_URL='redis://localhost:6379/0',
-    CELERY_RESULT_BACKEND='redis://localhost:6379/0'
+    CELERY_BROKER_URL="redis://localhost:6379/0",
+    CELERY_RESULT_BACKEND="redis://localhost:6379/0",
 )
 
 """
@@ -69,8 +74,11 @@ jwt = JWTManager(app)
 cache = Cache(app)
 limiter = Limiter(get_remote_address, app=app)
 migrate = Migrate(app, db)
-celery = Celery(app.import_name, backend=app.config['CELERY_RESULT_BACKEND'],
-                broker=app.config['CELERY_BROKER_URL'])
+celery = Celery(
+    app.import_name,
+    backend=app.config["CELERY_RESULT_BACKEND"],
+    broker=app.config["CELERY_BROKER_URL"],
+)
 
 """
 db: Initializes SQLAlchemy, which will manage database interactions.
@@ -84,16 +92,20 @@ celery: Initializes Celery for handling background tasks, using Redis for messag
 """
 
 # Enhanced logging setup
-if not os.path.exists('logs'):
-    os.mkdir('logs')
+if not os.path.exists("logs"):
+    os.mkdir("logs")
 
-file_handler = RotatingFileHandler('logs/app.log', maxBytes=10240, backupCount=10)
-file_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
+file_handler = RotatingFileHandler("logs/app.log", maxBytes=10240, backupCount=10)
+file_handler.setFormatter(
+    logging.Formatter(
+        "%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]"
+    )
+)
 file_handler.setLevel(logging.INFO)
 
 app.logger.addHandler(file_handler)
 app.logger.setLevel(logging.INFO)
-app.logger.info('Application startup')
+app.logger.info("Application startup")
 
 """
 Checks if a logs directory exists. If not, it creates one.
@@ -113,7 +125,9 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
-    role = db.Column(db.String(20), nullable=False, default='User')  # User roles: Admin, User
+    role = db.Column(
+        db.String(20), nullable=False, default="User"
+    )  # User roles: Admin, User
 
 
 """
@@ -226,12 +240,12 @@ send_email_task: A placeholder function that logs an email message. In a real ap
 """
 
 
-@app.route('/send-email', methods=['POST'])
+@app.route("/send-email", methods=["POST"])
 @jwt_required()
 def send_email():
     data = request.json
-    email = data.get('email')
-    message = data.get('message')
+    email = data.get("email")
+    message = data.get("message")
     send_email_task.delay(email, message)
     return jsonify({"message": "Email is being sent"}), 202
 
@@ -244,12 +258,12 @@ send_email_task.delay(email, message): Queues the email task to be processed in 
 
 
 # User registration
-@app.route('/register', methods=['POST'])
+@app.route("/register", methods=["POST"])
 def register():
     data = request.json
-    username = data.get('username')
-    password = data.get('password')
-    role = data.get('role', 'User')
+    username = data.get("username")
+    password = data.get("password")
+    role = data.get("role", "User")
     if User.query.filter_by(username=username).first():
         return jsonify({"error": "Username already exists"}), 400
     hashed_password = generate_password_hash(password)
@@ -267,11 +281,11 @@ and saves the new user to the database.
 
 
 # User login
-@app.route('/login', methods=['POST'])
+@app.route("/login", methods=["POST"])
 def login():
     data = request.json
-    username = data.get('username')
-    password = data.get('password')
+    username = data.get("username")
+    password = data.get("password")
     user = User.query.filter_by(username=username).first()
     if not user or not check_password_hash(user.password, password):
         return jsonify({"error": "Invalid credentials"}), 401
@@ -291,7 +305,7 @@ def role_required(required_role):
         @wraps(fn)
         def decorator(*args, **kwargs):
             identity = get_jwt_identity()
-            if identity['role'] != required_role:
+            if identity["role"] != required_role:
                 abort(403, description="Permission denied")
             return fn(*args, **kwargs)
 
@@ -307,10 +321,10 @@ It checks the user’s role from the JWT token and aborts the request if the rol
 
 
 # Create a new resource
-@app.route('/resource', methods=['POST'])
+@app.route("/resource", methods=["POST"])
 @jwt_required()
-@role_required('Admin')
-@limiter.limit("10 per minute", key_func=lambda: get_jwt_identity()['role'])
+@role_required("Admin")
+@limiter.limit("10 per minute", key_func=lambda: get_jwt_identity()["role"])
 def create_resource():
     data = request.json
     try:
@@ -331,7 +345,7 @@ Validates and creates a new resource in the database.
 
 
 # Read a resource
-@app.route('/resource/<int:resource_id>', methods=['GET'])
+@app.route("/resource/<int:resource_id>", methods=["GET"])
 @jwt_required()
 def read_resource(resource_id):
     resource = Resource.query.get_or_404(resource_id)
@@ -345,9 +359,9 @@ Requires a JWT token and returns the resource if found.
 
 
 # Update a resource
-@app.route('/resource/<int:resource_id>', methods=['PUT'])
+@app.route("/resource/<int:resource_id>", methods=["PUT"])
 @jwt_required()
-@role_required('Admin')
+@role_required("Admin")
 def update_resource(resource_id):
     resource = Resource.query.get_or_404(resource_id)
     data = request.json
@@ -367,9 +381,9 @@ Partially updates the resource with validated data.
 
 
 # Delete a resource
-@app.route('/resource/<int:resource_id>', methods=['DELETE'])
+@app.route("/resource/<int:resource_id>", methods=["DELETE"])
 @jwt_required()
-@role_required('Admin')
+@role_required("Admin")
 def delete_resource(resource_id):
     resource = Resource.query.get_or_404(resource_id)
     db.session.delete(resource)
@@ -385,31 +399,33 @@ Deletes the specified resource from the database.
 
 
 # List resources with pagination and sorting
-@app.route('/resources', methods=['GET'])
+@app.route("/resources", methods=["GET"])
 @jwt_required()
 @cache.cached(timeout=60, query_string=True)
 def list_resources():
-    page = request.args.get('page', 1, type=int)
-    per_page = request.args.get('per_page', 10, type=int)
-    sort_by = request.args.get('sort_by', 'id')
-    sort_order = request.args.get('sort_order', 'asc')
+    page = request.args.get("page", 1, type=int)
+    per_page = request.args.get("per_page", 10, type=int)
+    sort_by = request.args.get("sort_by", "id")
+    sort_order = request.args.get("sort_order", "asc")
 
     query = Resource.query
 
     # Apply sorting
-    if sort_order == 'desc':
+    if sort_order == "desc":
         query = query.order_by(db.desc(getattr(Resource, sort_by)))
     else:
         query = query.order_by(getattr(Resource, sort_by))
 
     resources = query.paginate(page=page, per_page=per_page, error_out=False)
 
-    return jsonify({
-        "total": resources.total,
-        "pages": resources.pages,
-        "current_page": resources.page,
-        "resources": resources_schema.dump(resources.items)
-    })
+    return jsonify(
+        {
+            "total": resources.total,
+            "pages": resources.pages,
+            "current_page": resources.page,
+            "resources": resources_schema.dump(resources.list),
+        }
+    )
 
 
 """
@@ -421,10 +437,10 @@ Supports pagination (page, per_page) and sorting (sort_by, sort_order).
 
 
 # Search and filter resources
-@app.route('/resources/search', methods=['GET'])
+@app.route("/resources/search", methods=["GET"])
 @jwt_required()
 def search_resources():
-    query = request.args.get('query', '', type=str)
+    query = request.args.get("query", "", type=str)
     resources = Resource.query.filter(Resource.name.contains(query)).all()
     return jsonify(resources_schema.dump(resources))
 
@@ -437,7 +453,7 @@ Filters resources by checking if their name contains the search query.
 
 
 # Refresh token endpoint
-@app.route('/refresh', methods=['POST'])
+@app.route("/refresh", methods=["POST"])
 @jwt_required(refresh=True)
 def refresh():
     identity = get_jwt_identity()

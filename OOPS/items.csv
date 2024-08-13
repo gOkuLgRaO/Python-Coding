@@ -1,6 +1,11 @@
-name,price,quantity
-"Phone",100,1
-"Laptop",1000,3
-"Cable",10,5
-"Mouse",50,5
-"Keyboard",75,5
+name,price,_quantity,_category,_weight,_brand
+Laptop,1200.99,5,Electronics,2.5,Dell
+Smartphone,899.99,10,Electronics,0.4,Apple
+Desk,199.99,15,Furniture,20.0,Ikea
+Chair,99.99,30,Furniture,10.0,Ikea
+Monitor,299.99,8,Electronics,5.0,Samsung
+Headphones,79.99,25,Accessories,0.2,Sony
+CoffeeMachine,150.99,12,Appliances,4.5,Philips
+Mouse,39.99,50,Accessories,0.1,Logitech
+Backpack,59.99,20,Accessories,1.0,Nike
+Printer,199.99,7,Electronics,8.0,HP
