@@ -18,6 +18,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import logging
 import os
 from celery import Celery
+from flask_cors import CORS
 
 """
 RotatingFileHandler: Manages the logging files and rotates them when they reach a certain size
@@ -40,6 +41,7 @@ Celery: A distributed task queue library for handling background jobs.
 
 """
 app = Flask(__name__)
+CORS(app)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "supersecretkey")
@@ -423,7 +425,7 @@ def list_resources():
             "total": resources.total,
             "pages": resources.pages,
             "current_page": resources.page,
-            "resources": resources_schema.dump(resources.list),
+            "resources": resources_schema.dump(resources.items),
         }
     )
 
