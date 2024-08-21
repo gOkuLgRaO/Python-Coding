@@ -3,11 +3,11 @@ def prefix(s):
         return ""
 
     # Sort the list to bring similar strings closer
-    strs.sort()
+    s.sort()
 
     # Take the first and the last string after sorting
-    first = strs[0]
-    last = strs[-1]
+    first = s[0]
+    last = s[-1]
     i = 0
 
     # Compare characters of the first and last string
