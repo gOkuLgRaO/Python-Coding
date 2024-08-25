@@ -31,7 +31,7 @@ ValidationError, fields, validate: used for data validation in marshmallow
 JWTManager, create_access_token, jwt_required, get_jwt_identity: Flask-JWT-Extended functions for handling
 JSON Web Tokens (JWT) for authentication.
 Cache: extension for caching
-Limiter, get_remote_address: flask limiter for rate limiting API calls
+Limiter, get_remote_address: flask limiter for rate limiting Flask calls
 Migrate: flask migrate helps manage database migration
 wraps: A decorator from 'functools' module to preserve metadata when wrapping functions with decorators.
 generate_password_hash, check_password_hash: Utilities from Werkzeug to securely hash and check passwords.
@@ -87,7 +87,7 @@ db: Initializes SQLAlchemy, which will manage database interactions.
 ma: Initializes Marshmallow, which will handle serialization, deserialization, and validation of data.
 jwt: Initializes JWTManager, which handles JWT-based authentication.
 cache: Initializes caching with Redis as the backend.
-limiter: Initializes Flask-Limiter for rate limiting API calls, using the client's IP address to identify the rate limit
+limiter: Initializes Flask-Limiter for rate limiting Flask calls, using the client's IP address to identify the rate limit
 migrate: Initializes Flask-Migrate for handling database migrations.
 celery: Initializes Celery for handling background tasks, using Redis for message brokering and result storage.
 
