@@ -23,7 +23,7 @@ if __name__ == "__main__":
     input_list = list(map(int, input("Enter the elements of the list").split()))
     print(rotate(input_list, position))
 
-'''
+"""
 rotate the given list according to index given by the user
 Example 1:
  * 
@@ -33,4 +33,4 @@ Example 1:
  * rotate 1 steps to the right: [7,1,2,3,4,5,6]
  * rotate 2 steps to the right: [6,7,1,2,3,4,5]
  * rotate 3 steps to the right: [5,6,7,1,2,3,4]
- '''
+ """
