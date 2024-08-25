@@ -20,3 +20,8 @@ class Solution:
 if __name__ == "__main__":
     strs = str(input("Enter the string"))
     print(Solution.length_of_last_word(strs))
+
+
+"""
+return the length of the last word of the sentence. 
+"""

@@ -10,3 +10,8 @@ if __name__ == "__main__":
     a = str(input("Enter the first string"))
     b = str(input("Enter the second string"))
     print(anagrams(a, b))
+
+
+"""
+check the number of occurrence of each letter of two words, if they are same. 
+"""

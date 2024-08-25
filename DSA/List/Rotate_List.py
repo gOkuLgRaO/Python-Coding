@@ -9,7 +9,7 @@ def reverse(number, start, end):
     while start < end:
         swap(number, start, end)
         start += 1
-        end += 1
+        end -= 1
 
 
 def swap(num, i, j):

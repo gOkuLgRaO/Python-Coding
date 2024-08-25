@@ -1,11 +1,11 @@
 class Solution:
     @staticmethod
-    def str_str(haystack: str, needle: str) -> int:
-        if len(haystack) < len(needle):
+    def str_str(sentence: str, word: str) -> int:
+        if len(sentence) < len(word):
             return -1
 
-        for i in range(len(haystack)):
-            if haystack[i : i + len(needle)] == needle:
+        for i in range(len(sentence)):
+            if sentence[i : i + len(word)] == word:
                 return i
         return -1
 
