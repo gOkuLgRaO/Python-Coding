@@ -3,6 +3,7 @@
         "backref",
         "jsonify",
         "levelname",
+        "mydemoproject",
         "sqlalchemy",
         "supersecretkey",
         "werkzeug"
