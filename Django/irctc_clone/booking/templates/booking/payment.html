@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{% comment %} <!DOCTYPE html>
 <html>
 <head>
     <title>Payment</title>
@@ -16,5 +16,121 @@
         {% csrf_token %}
         <button type="submit">Pay Now</button>
     </form>
+</body>
+</html> {% endcomment %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    {% load widget_tweaks %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment</title>
+    <!-- Bootstrap and custom CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            max-width: 600px;
+            margin-top: 50px;
+            background-color: #1c1c1c;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
+            animation: fade-in 0.6s ease-in-out;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #ff6b6b;
+        }
+
+        p {
+            font-size: 1.2em;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .total-amount {
+            font-weight: bold;
+            font-size: 1.5em;
+            color: #ff6b6b;
+            margin-bottom: 25px;
+        }
+
+        .btn-pay {
+            background-color: #ff6b6b;
+            border-color: #ff6b6b;
+            transition: background-color 0.3s ease-in-out, transform 0.2s;
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+
+        .btn-pay:hover {
+            background-color: #ff4040;
+            transform: scale(1.05);
+        }
+
+        .btn-pay:active {
+            transform: scale(0.98);
+        }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #777;
+        }
+
+        .footer-note a {
+            color: #ff6b6b;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .footer-note a:hover {
+            color: #ff4040;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Payment for Booking</h1>
+
+        <p><strong>Passenger Name:</strong> {{ booking.passenger_name }}</p>
+        <p><strong>Train:</strong> {{ booking.train.name }} ({{ booking.train.number }})</p>
+        <p><strong>Date of Journey:</strong> {{ booking.date_of_journey }}</p>
+        <p><strong>Seats Booked:</strong> {{ booking.seats_booked }}</p>
+
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-pay">Pay Now</button>
+        </form>
+
+        <p class="footer-note">Your payment is secure and processed through an encrypted system. <br> For help, contact <a href="#">support</a>.</p>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

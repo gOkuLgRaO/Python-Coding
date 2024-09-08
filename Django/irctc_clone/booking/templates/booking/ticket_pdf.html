@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{% comment %} <!DOCTYPE html>
 <html>
 <head>
     <title>Train Ticket</title>
@@ -15,5 +15,140 @@
     <p>Train: {{ booking.train.name }} ({{ booking.train.number }})</p>
     <p>Date of Journey: {{ booking.date_of_journey }}</p>
     <p>Seats Booked: {{ booking.seats_booked }}</p>
+</body>
+</html> {% endcomment %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    {% load widget_tweaks %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Train Ticket</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+        }
+
+        .container {
+            width: 100%;
+            border: 2px solid #121212;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #0f4c75;
+            margin-bottom: 40px;
+            font-size: 24px;
+            text-transform: uppercase;
+        }
+
+        .details {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .details p {
+            margin: 0;
+            font-size: 16px;
+            color: #333;
+            padding: 5px 0;
+        }
+
+        .details span {
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+            font-size: 16px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #0f4c75;
+            text-align: left;
+        }
+
+        th {
+            background-color: #0f4c75;
+            color: white;
+            font-weight: bold;
+        }
+
+        .qr-code {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .qr-code img {
+            width: 150px;
+            height: 150px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .highlight {
+            color: #e63946;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Train Ticket Confirmation</h1>
+
+        <!-- Passenger & Booking Info -->
+        <div class="details">
+            <p><span>Booking ID:</span> #{{ booking.id }}</p>
+            <p><span>Passenger Name:</span> {{ booking.passenger_name }}</p>
+            <p><span>Train:</span> {{ booking.train.name }} ({{ booking.train.number }})</p>
+            <p><span>Date of Journey:</span> {{ booking.date_of_journey }}</p>
+            <p><span>Seats Booked:</span> {{ booking.seats_booked }}</p>
+            <p><span>Boarding Time:</span> 06:30 AM (approx.)</p>
+        </div>
+
+        <!-- Seat & Journey Info -->
+        <table>
+            <thead>
+                <tr>
+                    <th>From</th>
+                    <th>To</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ booking.train.origin }}</td>
+                    <td>{{ booking.train.destination }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- QR Code for Verification -->
+        <div class="qr-code">
+            <p><span>Scan the QR Code for verification:</span></p>
+            <img src="path/to/qr-code-placeholder.png" alt="QR Code">
+        </div>
+
+        <!-- Footer Note -->
+        <div class="footer">
+            <p><span class="highlight">Important:</span> Please carry a valid government-issued ID. Boarding time is subject to change, so please verify your ticket at least 1 hour before departure.</p>
+        </div>
+    </div>
+
 </body>
 </html>

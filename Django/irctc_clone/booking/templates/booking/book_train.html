@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{% comment %} <!DOCTYPE html>
 <html>
 <head>
     <title>Book Train</title>
@@ -30,4 +30,149 @@
 
     <p>Available Seats: {{ available_seats }}</p>
 </body>
+</html> {% endcomment %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    {% load widget_tweaks %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Train</title>
+    <!-- Bootstrap and custom CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            max-width: 700px;
+            margin-top: 50px;
+            background-color: #1c1c1c;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ff6b6b;
+            font-size: 28px;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        label {
+            color: #ffffff;
+            margin-top: 10px;
+        }
+
+        input {
+            background-color: #2e2e2e;
+            color: #ffffff;
+            border: 1px solid #444;
+            border-radius: 5px;
+            padding: 10px;
+            width: 100%;
+        }
+
+        input:focus {
+            border-color: #ff6b6b;
+            outline: none;
+            box-shadow: none;
+        }
+
+        .btn-primary {
+            background-color: #ff6b6b;
+            border-color: #ff6b6b;
+            transition: background-color 0.3s ease-in-out, transform 0.2s;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background-color: #ff4040;
+            transform: scale(1.05);
+        }
+
+        .available-seats {
+            text-align: center;
+            font-size: 18px;
+            margin-top: 20px;
+            color: #ff6b6b;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        ul li {
+            background-color: #444;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            animation: fade-in 0.5s ease-in-out;
+        }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Book Train: {{ train.name }} ({{ train.number }})</h1>
+
+        <!-- Message display -->
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <!-- Booking Form -->
+        <form method="POST" class="needs-validation" novalidate>
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="passenger_name">Passenger Name:</label>
+                <input type="text" name="passenger_name" id="passenger_name" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="date_of_journey">Date of Journey:</label>
+                <input type="date" name="date_of_journey" id="date_of_journey" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="seats_booked">Seats to Book:</label>
+                <input type="number" name="seats_booked" id="seats_booked" min="1" max="{{ available_seats }}" required>
+            </div>
+
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary">Confirm Booking</button>
+            </div>
+        </form>
+
+        <p class="available-seats">Available Seats: {{ available_seats }}</p>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>
+

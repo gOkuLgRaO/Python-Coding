@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{% comment %} <!DOCTYPE html>
 <html>
 <head>
     <title>Cancel Booking</title>
@@ -11,5 +11,104 @@
         <button type="submit">Confirm Cancellation</button>
     </form>
     <a href="{% url 'booking_history' %}">Go Back</a>
+</body>
+</html> {% endcomment %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    {% load widget_tweaks %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cancel Booking</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            max-width: 600px;
+            margin-top: 50px;
+            background-color: #1c1c1c;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            animation: fade-in 0.6s ease-in-out;
+        }
+
+        h1 {
+            color: #ff6b6b;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            color: #ccc;
+        }
+
+        .btn-cancel, .btn-back {
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            margin: 10px;
+            transition: background-color 0.3s ease-in-out, transform 0.2s;
+        }
+
+        .btn-cancel {
+            background-color: #ff6b6b;
+            color: white;
+        }
+
+        .btn-back {
+            background-color: #282828;
+            color: white;
+        }
+
+        .btn-cancel:hover {
+            background-color: #ff4040;
+            transform: scale(1.05);
+        }
+
+        .btn-back:hover {
+            background-color: #3b3b3b;
+            transform: scale(1.05);
+        }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Cancel Booking for {{ booking.passenger_name }}</h1>
+        <p>Are you sure you want to cancel this booking?</p>
+
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn-cancel">Confirm Cancellation</button>
+        </form>
+        <a href="{% url 'booking_history' %}">
+            <button class="btn-back">Go Back</button>
+        </a>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
