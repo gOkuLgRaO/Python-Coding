@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Train Ticket</title>
+    <style>
+        h1 { text-align: center; }
+        p { margin-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 8px; border: 1px solid black; text-align: left; }
+    </style>
+</head>
+<body>
+    <h1>Train Ticket</h1>
+    <p>Passenger Name: {{ booking.passenger_name }}</p>
+    <p>Train: {{ booking.train.name }} ({{ booking.train.number }})</p>
+    <p>Date of Journey: {{ booking.date_of_journey }}</p>
+    <p>Seats Booked: {{ booking.seats_booked }}</p>
+</body>
+</html>

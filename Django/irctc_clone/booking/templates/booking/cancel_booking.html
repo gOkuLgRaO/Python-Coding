@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cancel Booking</title>
+</head>
+<body>
+    <h1>Cancel Booking for {{ booking.passenger_name }}</h1>
+    <p>Are you sure you want to cancel this booking?</p>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit">Confirm Cancellation</button>
+    </form>
+    <a href="{% url 'booking_history' %}">Go Back</a>
+</body>
+</html>

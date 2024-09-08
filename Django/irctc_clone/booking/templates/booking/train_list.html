@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Train List</title>
+</head>
+<body>
+    <h1>Available Trains</h1>
+    <ul>
+        {% for train in trains %}
+            <li>{{ train.name }} - From: {{ train.origin }} To: {{ train.destination }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Search for Trains</h2>
+    <form method="GET" action="{% url 'search_trains' %}">
+        <label for="origin">Origin:</label>
+        <input type="text" name="origin" id="origin">
+        <label for="destination">Destination:</label>
+        <input type="text" name="destination" id="destination">
+        <button type="submit">Search</button>
+    </form>
+</body>
+</html>

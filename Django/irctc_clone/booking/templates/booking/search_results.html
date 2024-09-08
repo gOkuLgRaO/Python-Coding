@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Results</title>
+</head>
+<body>
+    <h1>Search Results</h1>
+    <ul>
+        {% for train in trains %}
+            <li>{{ train.name }} - From: {{ train.origin }} To: {{ train.destination }}
+                <a href="{% url 'book_train' train.id %}">Book Now</a>
+            </li>
+        {% empty %}
+            <li>No trains found matching your search.</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'train_list' %}">Back to Train List</a>
+</body>
+</html>

@@ -1,0 +1,141 @@
+{% comment %} <!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+</head>
+<body>
+    <h1>Register</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Sign Up</button>
+    </form>
+    <a href="{% url 'login' %}">Already have an account? Login here</a>
+</body>
+</html> {% endcomment %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    {% load widget_tweaks %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - IRCTC Clone</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS for dark theme -->
+    <style>
+        body {
+            background-color: #1c1c1c;
+            color: #f2f2f2;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            margin-top: 60px;
+            max-width: 500px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo img {
+            width: 100px;
+        }
+
+        .logo h2 {
+            color: #ffcc00;
+            font-weight: bold;
+        }
+
+        .card {
+            background-color: #2e2e2e;
+            border: 1px solid #444;
+            padding: 20px;
+        }
+
+        .card-header {
+            background-color: #444;
+            color: #fff;
+            text-align: center;
+            border-bottom: 1px solid #555;
+        }
+
+        .form-control {
+            background-color: #333;
+            color: #fff;
+            border-color: #555;
+        }
+
+        .form-control:focus {
+            background-color: #333;
+            color: #fff;
+            border-color: #ffcc00;
+        }
+
+        .btn-primary {
+            background-color: #ffcc00;
+            border-color: #ffcc00;
+            color: #333;
+            font-weight: bold;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background-color: #ff9900;
+            border-color: #ff9900;
+        }
+
+        a {
+            color: #ffcc00;
+        }
+
+        a:hover {
+            color: #ff9900;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Logo Section -->
+        <div class="logo">
+            <img src="{% static 'images/irctc-logo.png' %}" alt="IRCTC Logo">
+            <h2>IRCTC Clone</h2>
+        </div>
+
+        <!-- Registration Card -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Register</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST" class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary mt-3">Sign Up</button>
+                </form>
+
+                <div class="footer">
+                    <a href="{% url 'login' %}">Already have an account? Login here</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

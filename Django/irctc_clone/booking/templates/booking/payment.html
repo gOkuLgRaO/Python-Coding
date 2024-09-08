@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment</title>
+</head>
+<body>
+    <h1>Payment for Booking</h1>
+
+    <p>Booking for: {{ booking.passenger_name }}</p>
+    <p>Train: {{ booking.train.name }} ({{ booking.train.number }})</p>
+    <p>Date of Journey: {{ booking.date_of_journey }}</p>
+    <p>Seats Booked: {{ booking.seats_booked }}</p>
+    <p>Total Amount: {{ booking.seats_booked|floatformat:2 }} $ (Simulated)</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit">Pay Now</button>
+    </form>
+</body>
+</html>

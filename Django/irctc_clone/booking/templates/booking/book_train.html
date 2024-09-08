@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book Train</title>
+</head>
+<body>
+    <h1>Book Train: {{ train.name }} ({{ train.number }})</h1>
+
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <label for="passenger_name">Passenger Name:</label>
+        <input type="text" name="passenger_name" id="passenger_name" required><br>
+
+        <label for="date_of_journey">Date of Journey:</label>
+        <input type="date" name="date_of_journey" id="date_of_journey" required><br>
+
+        <label for="seats_booked">Seats to Book:</label>
+        <input type="number" name="seats_booked" id="seats_booked" min="1" max="{{ available_seats }}" required><br>
+
+        <button type="submit">Confirm Booking</button>
+    </form>
+
+    <p>Available Seats: {{ available_seats }}</p>
+</body>
+</html>

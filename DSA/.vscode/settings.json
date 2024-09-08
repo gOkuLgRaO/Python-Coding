@@ -3,6 +3,7 @@
     "fptr",
     "inorder",
     "postorder",
-    "Preorder"
+    "Preorder",
+    "subarray"
   ]
 }

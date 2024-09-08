@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Booking History</title>
+</head>
+<body>
+    <h1>Your Booking History</h1>
+
+    {% if bookings %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Train</th>
+                    <th>Date of Journey</th>
+                    <th>Seats Booked</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                    <tr>
+                        <td>{{ booking.train.name }} ({{ booking.train.number }})</td>
+                        <td>{{ booking.date_of_journey }}</td>
+                        <td>{{ booking.seats_booked }}</td>
+                        <td><a href="{% url 'download_ticket' booking.id %}">Download Ticket (PDF)</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No bookings found.</p>
+    {% endif %}
+</body>
+</html>
